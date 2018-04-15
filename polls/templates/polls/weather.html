@@ -14,7 +14,7 @@
 
   function searchCurrentTemp(location){
     var API_KEY = "{{api_key}}";
-    const REQUEST = "http://api.openweathermap.org/data/2.5/weather?q="+ location + ",fi&APPID=" + API_KEY;
+    const REQUEST = "https://api.openweathermap.org/data/2.5/weather?q="+ location + ",fi&APPID=" + API_KEY;
 
     $.get({
       url: REQUEST,
