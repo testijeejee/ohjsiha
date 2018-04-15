@@ -1,22 +1,16 @@
 {% extends 'base.html' %}
-
 {% block content %}
 <h2> Tervetuloa käyttämään Kallen sääpalvelua </h2>
 <br></br>
-<h5>Valitse haluamasi paikkakunta ja katso tämänhetken lämpötila:<h5>
+<h5>Valitse haluamasi paikkakunta Suomesta ja katso tämänhetken lämpötila:<h5>
 <input id=searchValue />
 <button id="searchButton">Hae</button>
-
 {% csrf_token %}
 <script>
   $("#searchButton").click( function() {
     var value = $("#searchValue").val();
     searchCurrentTemp(value);
   })
-
-  window.addEventListener('error', function(e) {
-    console.log(e);
-  }, true);
 
   function searchCurrentTemp(location){
     var API_KEY = "{{api_key}}";
@@ -54,7 +48,5 @@
     }});
   }
 </script>
-
 <p id="temp"></p>
-
 {% endblock %}
