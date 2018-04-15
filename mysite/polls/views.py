@@ -12,4 +12,7 @@ def index(request):
     question.question_text = "Moi"
     question.pub_date = datetime.datetime.now()
     question.save()
-    return HttpResponse("Hello, world. You're at the polls index.")
+    return render(request, "polls/home.html")
+
+def register(request):
+    return render(request, "polls/register.html")
