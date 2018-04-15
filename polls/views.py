@@ -17,7 +17,7 @@ def register(request):
         form = RegisterationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/home')
+            return redirect('home')
     form = RegisterationForm()
     args = {'form': form}
     return render(request, "polls/register.html", args)
