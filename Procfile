@@ -1,1 +1,1 @@
-web: gunicorn wsd2018project.wsgi
+web: gunicorn mysite.wsgi
