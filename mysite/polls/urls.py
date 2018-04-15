@@ -8,4 +8,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='polls/login.html'), name='login'),
     path('logout/', auth_views.logout, name='logout'),
     path('loggedout/', views.loggedout, name='loggedout'),
+    path('weather/', views.weather, name='weather'),
+    path('weatherhandle/', views.weatherhandle, name="weatherhandle"),
 ]

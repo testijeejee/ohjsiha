@@ -7,13 +7,9 @@ from django.http import HttpResponse
 from .models import Question
 from .forms import RegisterationForm
 
-def index(request):
-    import datetime
+import json
 
-    question = Question()
-    question.question_text = "Moi"
-    question.pub_date = datetime.datetime.now()
-    question.save()
+def index(request):
     return render(request, "polls/home.html")
 
 def register(request):
@@ -28,3 +24,16 @@ def register(request):
 
 def loggedout(request):
     return render(request, 'polls/loggedout.html', {})
+
+def weather(request):
+    API_KEY = "8d99e4d64c439c2ba2d97e4cb53325b8"
+    args = {
+        "api_key": API_KEY
+    }
+    return render(request, 'polls/weather.html', args)
+
+def weatherhandle(request):
+    data = json.loads(request.body)
+    #Change temperature from Kelvin to Celsius
+    temp = data.get("main").get("temp") - 273.15
+    return HttpResponse(temp)

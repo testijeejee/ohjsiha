@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2> Tervetuloa käyttämään Kallen sääpalvelua </h2>
+<br></br>
+<h5>Valitse haluamasi paikkakunta ja katso tämänhetken lämpötila:<h5>
+<input id=searchValue />
+<button id="searchButton">Hae</button>
+
+{% csrf_token %}
+<script>
+  $("#searchButton").click( function() {
+    var value = $("#searchValue").val();
+    searchCurrentTemp(value);
+  })
+
+  window.addEventListener('error', function(e) {
+    console.log(e);
+  }, true);
+
+  function searchCurrentTemp(location){
+    var API_KEY = "{{api_key}}";
+    const REQUEST = "http://api.openweathermap.org/data/2.5/weather?q="+ location + ",fi&APPID=" + API_KEY;
+
+    $.get({
+      url: REQUEST,
+      error: function(xhr, ajaxOptions, thrownError) {
+        $("#temp").text("Kaupunkia ei löytynyt.");
+      },
+      success: function( data ) {
+      console.log(data)
+      var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        function csrfSafeMethod(method) {
+          // these HTTP methods do not require CSRF protection
+          return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+        $.ajax({
+          url: "/weatherhandle/",
+          type: "POST",
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify(data),
+          dataType: 'json',
+          success: function (response) {
+            $("#temp").text(response);
+          }
+        });
+    }});
+  }
+</script>
+
+<p id="temp"></p>
+
+{% endblock %}

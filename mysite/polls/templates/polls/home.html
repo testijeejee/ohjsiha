@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-MOI
+{% if user.is_authenticated %}
+ <h3>Welcome {{user}}<h3>
+
+{% else %}
+<h3>Please login first so you can do things in this site<h3>
+{% endif %}
+
 {% endblock %}
