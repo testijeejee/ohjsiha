@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.http import HttpResponse
 
+
 from .models import Question
+from .forms import RegisterationForm
 
 def index(request):
     import datetime
@@ -15,4 +17,14 @@ def index(request):
     return render(request, "polls/home.html")
 
 def register(request):
-    return render(request, "polls/register.html")
+    if request.method=="POST":
+        form = RegisterationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/home')
+    form = RegisterationForm()
+    args = {'form': form}
+    return render(request, "polls/register.html", args)
+
+def loggedout(request):
+    return render(request, 'polls/loggedout.html', {})

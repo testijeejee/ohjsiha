@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-Register
+<h1>Register</h1>
+<p>If you don't have account already, please register by giving following information:</p>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p}}
+  <button type="submit">Register</button>
+</form>
+
 {% endblock %}

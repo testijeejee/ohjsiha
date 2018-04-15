@@ -142,9 +142,9 @@ STATICFILES_DIRS = [
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# LOGIN_URL = 'login'
-# LOGIN_REDIRECT_URL = ''
-# LOGOUT_REDIRECT_URL = ''
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'loggedout'
 
 AUTH_PROFILE_MODULE = "account.UserProfile"
 
