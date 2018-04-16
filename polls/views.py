@@ -37,3 +37,6 @@ def weatherhandle(request):
     #Change temperature from Kelvin to Celsius
     temp = data.get("main").get("temp") - 273.15
     return HttpResponse(temp)
+
+def notes(request):
+    return render(request, 'polls/notes.html')

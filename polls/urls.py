@@ -10,4 +10,5 @@ urlpatterns = [
     path('loggedout/', views.loggedout, name='loggedout'),
     path('weather/', views.weather, name='weather'),
     path('weatherhandle/', views.weatherhandle, name="weatherhandle"),
+    path('notes/', views.notes, name="notes")
 ]
