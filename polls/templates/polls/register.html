@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Register</h1>
-<p>If you don't have account already, please register by giving following information:</p>
+<h3>Rekisteröidy</h3>
+<p>Luo uudet tunnukset täyttämällä kaikki kentät:</p>
 <form method="post">
   {% csrf_token %}
   {{ form.as_p}}
-  <button type="submit">Register</button>
+  <button type="submit">Rekisteröidy</button>
 </form>
 
 {% endblock %}

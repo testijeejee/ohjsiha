@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Login</h1>
+<h3>Kirjaudu sisään</h3>
 
 {% if user.is_authenticated %}
- <h2>You are already logged in<h2>
+ <h3>Olet jo kirjautunut sisään<h3>
 
 {% else %}
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">Login</button>
+  <button type="submit">Kirjaudu sisään</button>
 </form>
 {% endif %}
 {% endblock %}

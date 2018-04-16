@@ -25,17 +25,20 @@
           <!-- show different navigation bar if the user has logged in or not-->
           {% if user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link" href="/logout/">Logout</a>
+            <a class="nav-link" href="/weather/">Sääpalvelu</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/weather/">Weather</a>
+            <a class="nav-link" href="/logout/">Kirjaudu ulos</a>
           </li>
           {% else %}
           <li class="nav-item">
-            <a class="nav-link" href="/register/">Register</a>
+            <a class="nav-link" href="/weather/">Sääpalvelu</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/login/">Login</a>
+            <a class="nav-link" href="/register/">Rekisteröidy</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/login/">Kirjaudu sisään</a>
           </li>
           {% endif %}
         </ul>
