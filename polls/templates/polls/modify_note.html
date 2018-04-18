@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Hei {{user}}!</h3>
+<br></br>
+<p>Tässä voit muokata muistiinpanoasi</p>
+
+<form method="post">
+  {% csrf_token %}
+  {{form.as_p}}
+  <button type="submit">Tallenna</button>
+</form>
+
+
+{% endblock %}

@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.http import HttpResponse
 
-
-from .forms import RegisterationForm, NoteForm
+from .models import Note
+from .forms import RegisterationForm, NoteForm, ModifyNoteForm
 
 import json
 
@@ -43,8 +43,33 @@ def notes(request):
         if form.is_valid():
             form.save()
             return redirect('notes')
+
     form = NoteForm(user=request.user)
 
     args = { 'form': form }
 
     return render(request, 'polls/notes.html', args)
+
+def modifyNote(request, noteId):
+    try:
+        if request.method=="POST":
+            form = ModifyNoteForm(request.POST, instance=Note.objects.get(id=noteId))
+            if form.is_valid():
+                form.save()
+                return redirect('notes')
+
+        form = ModifyNoteForm(instance=Note.objects.get(id=noteId))
+
+        args = {'form': form, 'note': Note.objects.get(id=noteId)}
+
+        return render(request, 'polls/modify_note.html', args)
+
+    except Note.DoesNotExist:
+        return HttpResponse("Ei löydy")
+
+
+def deleteNote(request, noteId):
+    note = Note.objects.get(id=noteId)
+    note.delete()
+
+    return redirect('notes')

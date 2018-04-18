@@ -10,11 +10,16 @@
   {{form.as_p}}
   <button type="submit">Tallenna</button>
 </form>
-
+<br></br>
+<p>Aiemmat muistiinpanosi:</p>
 
 <ul>
   {% for note in user.notes.all %}
-    <li>{{note.pub_date}} - <b>{{note.notetitle}}</b> - {{note.notes}}</title>
+    <li>{{note.pub_date}} - <b>{{note.notetitle}}</b> - {{note.notes}}
+      <button><a href="modifynote/{{note.id}}">Muokkaa</a></button>
+      <button><a href="deletenote/{{note.id}}">Poista</a></button>
+    </li>
   {% endfor %}
 </ul>
+
 {% endblock %}

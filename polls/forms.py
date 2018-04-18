@@ -1,4 +1,4 @@
-import datetime
+from django.utils import timezone
 
 from django import forms
 from django.forms import ModelForm
@@ -31,6 +31,28 @@ class RegisterationForm(UserCreationForm):
 
         return user
 
+class ModifyNoteForm(ModelForm):
+
+    class Meta:
+        model = Note
+        fields = ['notetitle', 'notes']
+
+        labels = {
+            "notetitle": "Otsikko",
+            "notes": "Muistiinpano",
+        }
+
+    def save(self, commit=True):
+        note = super(ModifyNoteForm, self).save(commit=False)
+
+        note.pub_date = timezone.now()
+        note.notetitle = self.cleaned_data['notetitle']
+        note.notes = self.cleaned_data['notes']
+
+        if commit:
+            note.save()
+
+
 
 class NoteForm(ModelForm):
 
@@ -50,7 +72,7 @@ class NoteForm(ModelForm):
     def save(self, commit = True):
         note = super(NoteForm, self).save(commit=False)
 
-        note.pub_date = datetime.datetime.now()
+        note.pub_date = timezone.now()
         note.notetitle = self.cleaned_data['notetitle']
         note.notes = self.cleaned_data['notes']
         note.user = self.user
