@@ -14,3 +14,12 @@ class Note(models.Model):
 
     class Meta:
         ordering=['-pub_date']
+
+class WeatherSearch(models.Model):
+    celsius = models.FloatField()
+    city = models.CharField(max_length=50)
+    pub_date = models.DateTimeField()
+    lon = models.FloatField(default=0.0)
+    lat = models.FloatField(default=0.0)
+    class Meta:
+        ordering=['-pub_date']

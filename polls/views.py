@@ -1,15 +1,25 @@
 from django.shortcuts import render, redirect
-
+import json
+from django.core import serializers
 # Create your views here.
 from django.http import HttpResponse
+from django.utils import timezone
 
-from .models import Note
+
+from .models import Note, WeatherSearch
 from .forms import RegisterationForm, NoteForm, ModifyNoteForm
 
 import json
 
 def index(request):
-    return render(request, "polls/home.html")
+
+    search_objects = WeatherSearch.objects.all
+    #objects = search_objects
+    #objects = serializers.serialize('json', search_objects)
+    #print(objects)
+    args = { "search_objects": search_objects }
+
+    return render(request, "polls/home.html", args)
 
 def register(request):
     if request.method=="POST":
@@ -33,8 +43,18 @@ def weather(request):
 
 def weatherhandle(request):
     data = json.loads(request.body)
+    print(data)
     #Change temperature from Kelvin to Celsius
     temp = data.get("main").get("temp") - 273.15
+
+    weathersearch = WeatherSearch()
+    weathersearch.celsius = temp
+    weathersearch.pub_date = timezone.now()
+    weathersearch.city = data.get("name")
+    weathersearch.lat = data.get("coord").get("lat")
+    weathersearch.lon = data.get("coord").get("lon")
+    weathersearch.save()
+
     return HttpResponse(temp)
 
 def notes(request):
