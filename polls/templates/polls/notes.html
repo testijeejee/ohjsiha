@@ -5,5 +5,16 @@
 <br></br>
 <p>Tänne voit kirjata omia muistiinpanoja esimerkiksi säätiedoista</p>
 
+<form method="post">
+  {% csrf_token %}
+  {{form.as_p}}
+  <button type="submit">Tallenna</button>
+</form>
 
+
+<ul>
+  {% for note in user.notes.all %}
+    <li>{{note.pub_date}} - <b>{{note.notetitle}}</b> - {{note.notes}}</title>
+  {% endfor %}
+</ul>
 {% endblock %}

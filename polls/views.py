@@ -4,8 +4,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
 
-from .models import Question
-from .forms import RegisterationForm
+from .forms import RegisterationForm, NoteForm
 
 import json
 
@@ -39,4 +38,13 @@ def weatherhandle(request):
     return HttpResponse(temp)
 
 def notes(request):
-    return render(request, 'polls/notes.html')
+    if request.method=="POST":
+        form = NoteForm(request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('notes')
+    form = NoteForm(user=request.user)
+
+    args = { 'form': form }
+
+    return render(request, 'polls/notes.html', args)

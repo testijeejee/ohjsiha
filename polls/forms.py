@@ -1,7 +1,11 @@
+import datetime
+
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+
+from .models import Note
 
 class RegisterationForm(UserCreationForm):
 
@@ -26,3 +30,32 @@ class RegisterationForm(UserCreationForm):
             user.save()
 
         return user
+
+
+class NoteForm(ModelForm):
+
+    class Meta:
+        model = Note
+        fields = ['notetitle', 'notes']
+        labels = {
+            "notetitle": "Otsikko",
+            "notes": "Muistiinpano",
+        }
+
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super(NoteForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit = True):
+        note = super(NoteForm, self).save(commit=False)
+
+        note.pub_date = datetime.datetime.now()
+        note.notetitle = self.cleaned_data['notetitle']
+        note.notes = self.cleaned_data['notes']
+        note.user = self.user
+
+        if commit:
+            note.save()
+
+        return note
