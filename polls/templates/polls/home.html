@@ -1,12 +1,17 @@
 {% extends 'base.html' %}
 
 {% block head %}
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 {% endblock %}
 
 {% block content %}
 {% if user.is_authenticated %}
 <h3>Tervetuloa {{user}}!<h3>
+
+{% else %}
+<h3>Tervetuloa<h3>
+{% endif %}
 
 <ul>
     {% for object in search_objects.all %}
@@ -20,38 +25,47 @@
 
 $(function () {
 
-    var objects = "{{ search_objects|safe }}"
+    var objects = $.get({
+      url: "/graph",
+      success: function(data) {
 
-    console.log(objects)
-    var myChart = Highcharts.chart('container', {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Tehdyt haut'
-        },
-        xAxis: {
-            categories: objects
-        },
-        yAxis: {
+        var counts = {};
+        for (var i = 0; i < data.length; i++) {
+          counts[data[i]] = 1 + (counts[data[i]] || 0);
+        }
+        var keys = Object.keys(counts);
+        var values = Object.values(counts);
+
+
+        var myChart = Highcharts.chart('container', {
+            chart: {
+                type: 'bar',
+                marginLeft: 100,
+                width: 500
+            },
             title: {
-                text: 'Fruit eaten'
-            }
-        },
-        series: [{
-            name: 'Jane',
-            data: [1, 0, 4]
-        }, {
-            name: 'John',
-            data: [5, 7, 3]
-        }]
+                text: 'Palvelussa tehdyt haut'
+            },
+            xAxis: {
+                categories: keys
+            },
+            yAxis: {
+                title: {
+                    text: 'Määrä'
+                },
+                allowDecimals: false
+            },
+            series: [{
+                name: 'Hakujen määrä',
+                data: values
+            }]
+        });
+      }
     });
+
 });
 
 </script>
 </div>
-{% else %}
-<h3>Tervetuloa<h3>
-{% endif %}
 
 {% endblock %}

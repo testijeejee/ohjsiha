@@ -12,5 +12,6 @@ urlpatterns = [
     path('weatherhandle/', views.weatherhandle, name="weatherhandle"),
     path('notes/', views.notes, name="notes"),
     path('notes/modifynote/<int:noteId>', views.modifyNote, name="modifyNote"),
-    path('notes/deletenote/<int:noteId>', views.deleteNote, name="deletenote")
+    path('notes/deletenote/<int:noteId>', views.deleteNote, name="deletenote"),
+    path('graph/', views.cityGraph, name="cityGraph")
 ]
