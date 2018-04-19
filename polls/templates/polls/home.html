@@ -19,14 +19,68 @@
     {% endfor %}
 </ul>
 
+<table>
+  <tr>
+    <td><div id="cityContainer" style="width:100%; height:400px;" /></td>
+    <td><div id="tempContainer" style="width:100%; height:400px;" /></td>
+  </tr>
+  <tr>
+    <td>
+      <div class="dropdown">
+        <h3>Katso haluamasi kaupungin hakutulokset</h3>
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Valitse kaupunki
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu" id="cityDropDown">
+        </ul>
+      </div>
+      <div style="height:400px;width:500px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+        <ul id="searchList">
+        </ul>
+      <div>
+    </td>
+  </tr>
+</table>
 
-<div id="container" style="width:100%; height:400px;">
+
+
 <script type="application/javascript">
 
-$(function () {
+function citySearch(cityName) {
+  $.get({
+    url: '/graph/city/' + cityName,
+    success: function(data) {
+      var list = document.getElementById("searchList");
+      list.innerHTML = "";
+      var keys = Object.keys(data);
+      var values = Object.values(data);
 
-    var objects = $.get({
-      url: "/graph",
+      for (var i = 0; i < keys.length; i++) {
+        var entry = document.createElement("li");
+        entry.appendChild(document.createTextNode(keys[i] + " = " + values[i] + "°C"));
+        list.appendChild(entry);
+      };
+    }
+  });
+}
+
+function createButton(city) {
+  var list = document.getElementById("cityDropDown");
+
+  var entry = document.createElement("li");
+  var button = document.createElement("button");
+  button.innerHTML = city;
+
+  button.onclick = function() {
+    citySearch(city);
+  }
+
+  entry.appendChild(button);
+  list.appendChild(entry);
+}
+
+$(function () {
+    $.get({
+      url: "/graph/city",
       success: function(data) {
 
         var counts = {};
@@ -36,8 +90,12 @@ $(function () {
         var keys = Object.keys(counts);
         var values = Object.values(counts);
 
+        //Adds all distinct cities to dropdown menu
+        for (var i = 0; i < keys.length; i++) {
+          createButton(keys[i])
+        }
 
-        var myChart = Highcharts.chart('container', {
+        var myChart = Highcharts.chart('cityContainer', {
             chart: {
                 type: 'bar',
                 marginLeft: 100,
@@ -57,6 +115,38 @@ $(function () {
             },
             series: [{
                 name: 'Hakujen määrä',
+                data: values
+            }]
+        });
+      }
+    });
+
+    $.get({
+      url: "/graph/temp",
+      success: function(data) {
+        var keys = Object.keys(data);
+        var values = Object.values(data);
+
+        var myChart = Highcharts.chart('tempContainer', {
+            chart: {
+                type: 'bar',
+                marginLeft: 100,
+                width: 500
+            },
+            title: {
+                text: 'Tehtyjen hakujen keskiarvolämpötilat (°C) '
+            },
+            xAxis: {
+                categories: keys
+            },
+            yAxis: {
+                title: {
+                    text: 'Lämpötila (°C)'
+                },
+                allowDecimals: false
+            },
+            series: [{
+                name: 'Lämpötilan keskiarvo',
                 data: values
             }]
         });

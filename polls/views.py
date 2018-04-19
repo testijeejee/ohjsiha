@@ -12,14 +12,48 @@ from .forms import RegisterationForm, NoteForm, ModifyNoteForm
 import json
 
 def index(request):
-    return render(request, "polls/home.html", {})
+    args = {
+        "searches": WeatherSearch.objects.all(),
+        "searches_distinct": WeatherSearch.objects.all()
+    }
+    return render(request, "polls/home.html", args)
 
-def cityGraph(request):
-    search_objects = WeatherSearch.objects.values_list("city", flat=True)
-    objects = list(search_objects)
-    json_objects = json.dumps(objects)
+def createGraph(request, graphType):
+    if graphType == "city":
+        search_objects = WeatherSearch.objects.values_list("city", flat=True)
+        objects = list(search_objects)
+
+
+    elif graphType == "temp":
+        celsius_objects = WeatherSearch.objects.values_list("celsius", flat=True)
+        city_objects = WeatherSearch.objects.values_list("city", flat=True)
+        search_objects = {}
+
+        for i in range(0, len(celsius_objects)):
+            if city_objects[i] in search_objects:
+                search_objects[city_objects[i]].append(celsius_objects[i])
+            else:
+                search_objects[city_objects[i]] = [celsius_objects[i]]
+
+        for i in search_objects:
+            sum = 0
+            for amount in search_objects[i]:
+                sum = sum + amount
+
+            search_objects[i] = sum/len(search_objects[i])
+
+        objects = search_objects
 
     return JsonResponse(objects, safe=False)
+
+def cityList(request, cityName):
+    searches = WeatherSearch.objects.filter(city = cityName)
+    objects = {}
+    for i in searches:
+        objects[i.pub_date.strftime('%m/%d/%Y')] = i.celsius
+
+    return JsonResponse(objects)
+
 
 def register(request):
     if request.method=="POST":

@@ -13,5 +13,7 @@ urlpatterns = [
     path('notes/', views.notes, name="notes"),
     path('notes/modifynote/<int:noteId>', views.modifyNote, name="modifyNote"),
     path('notes/deletenote/<int:noteId>', views.deleteNote, name="deletenote"),
-    path('graph/', views.cityGraph, name="cityGraph")
+    path('graph/<str:graphType>', views.createGraph, name="createGraph"),
+    path('graph/city/<str:cityName>', views.cityList, name="cityList")
+
 ]
