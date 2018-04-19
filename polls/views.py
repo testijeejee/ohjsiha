@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 import json
+import pytz, datetime, time
 from django.core import serializers
 # Create your views here.
 from django.http import HttpResponse
@@ -50,7 +51,7 @@ def cityList(request, cityName):
     searches = WeatherSearch.objects.filter(city = cityName)
     objects = {}
     for i in searches:
-        objects[i.pub_date.strftime('%m/%d/%Y')] = i.celsius
+        objects[i.pub_date.strftime('%d.%m.%Y - %H:%M:%S')] = i.celsius
 
     return JsonResponse(objects)
 
