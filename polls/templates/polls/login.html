@@ -12,5 +12,88 @@
   {{ form.as_p }}
   <button type="submit">Kirjaudu sisään</button>
 </form>
+
+<script>
+window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '374450249728045',
+    cookie     : true,
+    xfbml      : true,
+    version    : 'v2.12'
+  });
+
+  FB.AppEvents.logPageView();
+  checkLoginState();
+};
+
+function checkLoginState() {
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+
+    FB.api('/me?fields=first_name,last_name,email', function(response) {
+        console.log(response.first_name);
+        console.log(response.last_name);
+        console.log(response.email);
+
+        var user_object = {
+          "first_name": response.first_name,
+          "last_name": response.last_name,
+          "email": response.email,
+          "id": response.id
+        }
+
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        function csrfSafeMethod(method) {
+          // these HTTP methods do not require CSRF protection
+          return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        $.ajax({
+          url: '/facebookRegistration/',
+          type: "POST",
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify(user_object),
+          dataType: 'json',
+          success: function(response) {
+            console.log("Success");
+          }
+        });
+    });
+  });
+}
+
+function statusChangeCallback(response) {
+  console.log(response);
+  // console.log(response.authResponse.accessToken);
+
+}
+
+function logOut() {
+  FB.logout(function(response) {
+    console.log(response); // user is now logged out
+  });
+}
+
+(function(d, s, id){
+   var js, fjs = d.getElementsByTagName(s)[0];
+   if (d.getElementById(id)) {return;}
+   js = d.createElement(s); js.id = id;
+   js.src = "https://connect.facebook.net/en_US/sdk.js";
+   fjs.parentNode.insertBefore(js, fjs);
+ }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<fb:login-button
+  scope="public_profile,email"
+  onlogin="checkLoginState();">
+</fb:login-button>
+
 {% endif %}
 {% endblock %}

@@ -3,10 +3,19 @@
 <h3> Tervetuloa käyttämään Kallen sääpalvelua! :)</h3>
 <br></br>
 <p>Valitse haluamasi paikkakunta Suomesta ja katso tämänhetken lämpötila (°C):</p>
-<input id=searchValue />
-<button id="searchButton">Hae</button>
+<form id="searchForm">
+  <input id=searchValue />
+  <input type="button" id="searchButton" value="Hae" />
+</form>
 {% csrf_token %}
 <script>
+
+  $("#searchForm").submit( function(event) {
+    event.preventDefault();
+    var value = $("#searchValue").val();
+    searchCurrentTemp(value);
+  })
+
   $("#searchButton").click( function() {
     var value = $("#searchValue").val();
     searchCurrentTemp(value);
@@ -48,5 +57,5 @@
     }});
   }
 </script>
-<p id="temp"></p>
+<h2 id="temp" style="text-align: center;"></h2>
 {% endblock %}

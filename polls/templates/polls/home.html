@@ -6,10 +6,15 @@
 {% endblock %}
 
 {% block content %}
+
+<canvas id="myCanvas" width="300" height="100" style="border:1px solid #000000;">
+</canvas>
+
 {% if user.is_authenticated %}
 <h3>Tervetuloa {{user}}!<h3>
 
 {% else %}
+
 <h3>Tervetuloa<h3>
 {% endif %}
 
@@ -41,9 +46,12 @@
   </tr>
 </table>
 
-
-
 <script type="application/javascript">
+
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+ctx.font = "30px Arial";
+ctx.strokeText("Kallen sääpalvelu", 10, 50);
 
 function citySearch(cityName) {
   $.get({

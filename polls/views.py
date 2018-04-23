@@ -127,3 +127,22 @@ def deleteNote(request, noteId):
     note.delete()
 
     return redirect('notes')
+
+def facebookRegistration(request):
+    try:
+        print("Try")
+        data = json.loads(request.body)
+        user = User.objects.get(username=data.get('id'))
+        login(request, user)
+        return HttpResponse("Try")
+
+    except User.DoesNotExist:
+        print("Except")
+        user = User()
+        user.first_name = data.get('first_name')
+        user.last_name = data.get('last_name')
+        user.username = data.get('id')
+        user.email = data.get('email')
+        user.save()
+        login(request, user)
+        return HttpResponse("Except")
