@@ -70,17 +70,6 @@ function checkLoginState() {
   });
 }
 
-function statusChangeCallback(response) {
-  console.log(response);
-  // console.log(response.authResponse.accessToken);
-
-}
-
-function logOut() {
-  FB.logout(function(response) {
-    console.log(response); // user is now logged out
-  });
-}
 
 (function(d, s, id){
    var js, fjs = d.getElementsByTagName(s)[0];
