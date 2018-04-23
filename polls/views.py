@@ -136,7 +136,6 @@ def facebookRegistration(request):
         data = json.loads(request.body)
         user = User.objects.get(username=data.get('id'))
         login(request, user)
-        return HttpResponse("Try")
 
     except User.DoesNotExist:
         print("Except")
@@ -147,4 +146,5 @@ def facebookRegistration(request):
         user.email = data.get('email')
         user.save()
         login(request, user)
-        return HttpResponse("Except")
+
+    return JsonResponse({})
