@@ -13,6 +13,11 @@
   <button type="submit">Kirjaudu sisään</button>
 </form>
 
+<fb:login-button
+  scope="public_profile,email"
+  onlogin="checkLoginState();">
+</fb:login-button>
+
 <script>
 window.fbAsyncInit = function() {
   FB.init({
@@ -62,7 +67,7 @@ function checkLoginState() {
           data: JSON.stringify(user_object),
           dataType: 'json',
           success: function(response) {
-            console.log("Success");
+            window.location.replace("https://kallensaapalvelu.herokuapp.com/");
           }
         });
     });
@@ -90,10 +95,6 @@ function logOut() {
  }(document, 'script', 'facebook-jssdk'));
 </script>
 
-<fb:login-button
-  scope="public_profile,email"
-  onlogin="checkLoginState();">
-</fb:login-button>
 
 {% endif %}
 {% endblock %}
