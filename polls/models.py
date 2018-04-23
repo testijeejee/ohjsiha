@@ -23,3 +23,8 @@ class WeatherSearch(models.Model):
     lat = models.FloatField(default=0.0)
     class Meta:
         ordering=['-pub_date']
+
+
+class APIKey(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    api_key = models.CharField(max_length=25)

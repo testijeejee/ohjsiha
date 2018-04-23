@@ -15,5 +15,8 @@ urlpatterns = [
     path('notes/deletenote/<int:noteId>', views.deleteNote, name="deletenote"),
     path('graph/<str:graphType>', views.createGraph, name="createGraph"),
     path('graph/city/<str:cityName>', views.cityList, name="cityList"),
-    path('facebookRegistration/', views.facebookRegistration, name="facebookRegistration")
+    path('facebookRegistration/', views.facebookRegistration, name="facebookRegistration"),
+    path('apidata/<str:cityName>', views.fetchApiData, name="fetchApiData"),
+    path('api/', views.apiView, name="apiView"),
+    path('api/generateapikey', views.generateApiKey, name="generateApiKey")
 ]

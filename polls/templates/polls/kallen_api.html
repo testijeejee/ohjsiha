@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<h3>Kallen api</h3>
+<p>Luo API avain ja voit ladata palvelun keräämät tiedot itsellesi JSON muodossa!</p>
+<div>Saat kaupunkikohtaiset haut tietokannasta tekemällä GET pyynnön osoitteeseen</div>
+<div>https://kallensaapalvelu.herokuapp.com/apidata/{kaupunki}?apikey={sinun API avain}</div><br />
+<div id="apidiv" style="display: none;">Esimerkiksi Helsingin säähaut saat osoitteesta: https://kallensaapalvelu.herokuapp.com/apidata/Helsinki?apikey=<span id="apikey"></span></div><br />
+<button onclick="generateApiKey()">Luo API-avain</button>
+<div id="apikey2">
+</div>
+<script>
+  function generateApiKey() {
+    $.get({
+      url: "generateapikey",
+      success: function(data) {
+        $("#apikey").text(data);
+        $("#apikey2").text(data);
+        $("#apidiv").attr("style", "display: block;");
+      }
+    })
+  }
+</script>
+
+{% endif %}
+{% endblock %}

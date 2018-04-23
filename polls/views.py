@@ -8,11 +8,11 @@ from django.utils import timezone
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import login
-
-from .models import Note, WeatherSearch
+from django.contrib.auth.decorators import login_required
+from .models import Note, WeatherSearch, APIKey
 from .forms import RegisterationForm, NoteForm, ModifyNoteForm
 
-import json
+import json, random, string
 
 def index(request):
     args = {
@@ -68,6 +68,7 @@ def register(request):
     args = {'form': form}
     return render(request, "polls/register.html", args)
 
+@login_required
 def loggedout(request):
     return render(request, 'polls/loggedout.html', {})
 
@@ -93,6 +94,7 @@ def weatherhandle(request):
 
     return HttpResponse(temp)
 
+@login_required
 def notes(request):
     if request.method=="POST":
         form = NoteForm(request.POST, user=request.user)
@@ -106,6 +108,7 @@ def notes(request):
 
     return render(request, 'polls/notes.html', args)
 
+@login_required
 def modifyNote(request, noteId):
     try:
         if request.method=="POST":
@@ -123,7 +126,7 @@ def modifyNote(request, noteId):
     except Note.DoesNotExist:
         return HttpResponse("Ei löydy")
 
-
+@login_required
 def deleteNote(request, noteId):
     note = Note.objects.get(id=noteId)
     note.delete()
@@ -132,13 +135,11 @@ def deleteNote(request, noteId):
 
 def facebookRegistration(request):
     try:
-        print("Try")
         data = json.loads(request.body)
         user = User.objects.get(username=data.get('id'))
         login(request, user)
 
     except User.DoesNotExist:
-        print("Except")
         user = User()
         user.first_name = data.get('first_name')
         user.last_name = data.get('last_name')
@@ -148,3 +149,55 @@ def facebookRegistration(request):
         login(request, user)
 
     return JsonResponse({})
+
+@login_required
+def apiView(request):
+    return render(request, "polls/kallen_api.html")
+
+
+def fetchApiData(request, cityName):
+    args = {}
+    returndict = {}
+
+    try:
+        APIKey.objects.get(api_key=request.GET.get('apikey'))
+        city_data = WeatherSearch.objects.filter(city=cityName)
+        i=1
+        for city_object in city_data:
+            returndict[i] = {
+                "celsius": city_object.celsius,
+                "pub_date": str(city_object.pub_date),
+                "lat": city_object.lat,
+                "lon": city_object.lon
+            }
+            i += 1
+        returnjson = json.dumps(returndict)
+        args = {
+            "apidata": returnjson
+        }
+
+        if not returndict:
+            args = {
+                "apidata": "Etsimääsi kaupunkia ei löydy."
+            }
+
+    except APIKey.DoesNotExist:
+        args = {
+            "apidata": "API avainta ei ole olemassa. Luo uusi avain."
+        }
+
+    return render(request, "polls/apidata.html", args)
+
+@login_required
+def generateApiKey(request):
+    try:
+        userAPI_KEY = request.user.apikey.api_key
+
+    except DoesNotExist:
+        userAPI_KEY = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(20))
+        apikey = APIKey()
+        apikey.api_key = userAPI_KEY
+        apikey.user = request.user
+        apikey.save()
+
+    return HttpResponse(userAPI_KEY)
