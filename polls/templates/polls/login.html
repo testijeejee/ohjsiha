@@ -28,7 +28,6 @@ window.fbAsyncInit = function() {
   });
 
   FB.AppEvents.logPageView();
-  checkLoginState();
 };
 
 function checkLoginState() {
@@ -36,9 +35,6 @@ function checkLoginState() {
     statusChangeCallback(response);
 
     FB.api('/me?fields=first_name,last_name,email', function(response) {
-        console.log(response.first_name);
-        console.log(response.last_name);
-        console.log(response.email);
 
         var user_object = {
           "first_name": response.first_name,
