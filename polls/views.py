@@ -6,6 +6,8 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.utils import timezone
 from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.contrib.auth import login
 
 from .models import Note, WeatherSearch
 from .forms import RegisterationForm, NoteForm, ModifyNoteForm
